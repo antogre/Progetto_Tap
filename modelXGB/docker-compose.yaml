@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  
+  spark:
+    build:
+      context: . 
+      dockerfile: model/Dockerfile
+    hostname: spark
+    container_name: spark
+    volumes:
+      - ./tmp:/tmp  # Monta ./tmp per mantenere la cache delle dipendenze di Ivy
+      - ./model/regressore.py:/home/spark/regressore.py
+    command: > 
+      /opt/spark/bin/spark-submit --conf spark.driver.extraJavaOptions="-Divy.cache.dir=/tmp -Divy.home=/tmp" --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.2  /home/spark/regressore.py
+   
